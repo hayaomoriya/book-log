@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { API_BASE_URL } from "@/lib/constants";
 
-async function handler(req: NextRequest, ctx: { params: { path?: string[] } }) {
+async function handler(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
   const { params } = ctx;
   const path = (await params)?.path?.join("/");
 
