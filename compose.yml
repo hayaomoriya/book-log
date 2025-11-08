@@ -1,0 +1,74 @@
+services:
+  server:
+    build:
+      context: ./book-log-api
+      dockerfile: Dockerfile
+    container_name: book_log_server
+    restart: always
+    volumes:
+      - ./book-log-api:/var/www/html
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: book_log_db
+      DB_USERNAME: root
+      DB_PASSWORD: password
+    networks:
+      - book-log-network
+
+  client-nextjs:
+    build:
+      context: ./book-log-client
+      dockerfile: Dockerfile
+    container_name: book_log_client_nextjs
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - book-log-network
+
+  client-nuxtjs:
+    build:
+      context: ./book-log-client2
+      dockerfile: Dockerfile
+    container_name: book_log_client_nuxtjs
+    restart: always
+    ports:
+      - "4000:3000"
+    networks:
+      - book-log-network
+
+  db:
+    image: mysql:8.0
+    container_name: book_log_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: book_log_db
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - book-log-network
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: book_log_nginx
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - ./book-log-api:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - server
+      - client-nextjs
+    networks:
+      - book-log-network
+
+volumes:
+  dbdata:
+
+networks:
+  book-log-network:
+    driver: bridge
