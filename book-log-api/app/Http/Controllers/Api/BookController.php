@@ -33,8 +33,8 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', \App\Models\Book::class);
         $userId = Auth::id();
-        echo $userId;
 
         $validated = $request->validate([
             "title" => "required|string|max:255",
@@ -58,6 +58,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
+        $this->authorize('view', $book);
         return $book;
     }
 
@@ -71,8 +72,8 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
+        $this->authorize('update', $book);
         $validated = $request->validate([
-            "id" => "required|numeric",
             "title" => "sometimes|required|string|max:255",
             "notes" => "sometimes|required|string|max:255",
             "completed_date" => "sometimes|required|date",
@@ -92,6 +93,7 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
+        $this->authorize('delete', $book);
         $book->delete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT); // 204
