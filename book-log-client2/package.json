@@ -17,6 +17,7 @@
     "@nuxt/ufo": "^0.5.4",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/proxy": "^2.1.0",
+    "@nuxtjs/vercel-builder": "^0.25.0",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
